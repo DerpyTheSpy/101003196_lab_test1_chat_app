@@ -16,16 +16,16 @@
 
 body {
 	font-size: 16px;
-	background: var(--light-color);
+	background: #f4f4f4;
 	margin: 20px;
-	font-family: 'Roboto', sans-serif;
+	font-family: sans-serif;
 }
 
 .btn {
 	cursor: pointer;
 	padding: 5px 15px;
-	background: var(--light-color);
-	color: var(--dark-color-a);
+	background: white;
+	color: green;
 	border: 0;
 	font-size: 17px;
 }
@@ -57,7 +57,7 @@ ul {
 	padding: 15px;
 	align-items: center;
 	justify-content: space-between;
-	background: var(--dark-color-a);
+	background: green;
 }
 
 
@@ -70,7 +70,7 @@ ul {
 
 .chat-side {
 	padding: 20px 20px 60px;
-	background: var(--dark-color-b);
+	background: limegreen;
 	overflow-y: scroll;
 	color: #fff;
 }
@@ -101,7 +101,7 @@ ul {
 .chat-msgs .message .msgInfo {
 	font-size: 15px;
 	font-weight: bold;
-	color: var(--dark-color-b);
+	color: green;
 	margin-bottom: 7px;
 	opacity: 0.7;
 }
@@ -112,14 +112,14 @@ ul {
 	overflow-wrap: break-word;
 	padding: 10px;
 	border-radius: 5px;
-	background-color: var(--light-color);
+	background-color: greenyellow;
 }
 
 
 
 .chat-form-cont {
 	padding: 20px 30px;
-	background-color: var(--dark-color-a);
+	background-color: limegreen;
 }
 
 .chat-form-cont input[type='text'] {
@@ -138,7 +138,7 @@ ul {
 /* Join Page */
 
 .join-main {
-	background: var(--dark-color-b);
+	background: #5cb85c;
 	padding: 30px 40px;
 }
 
@@ -155,7 +155,7 @@ ul {
 }
 
 .join-header {
-	background: var(--dark-color-a);
+	background: green;
 	padding: 20px;
 	border-top-left-radius: 5px;
 	text-align: center;
