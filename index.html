@@ -107,7 +107,7 @@
   <script>
     function setUsername() {
       var objUrlParams = new URLSearchParams(window.location.search);
-      client.emit("newUser", objUrlParams.get("uname"));
+      client.emit("newUser", objUrlParams.get("name"));
     }
     function myFunction(room) {
       window.location.href = "../chat/" + room;
