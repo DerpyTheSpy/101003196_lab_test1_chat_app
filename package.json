@@ -1,0 +1,12 @@
+{
+  "name": "101003196_lab_test1_chat_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Minkyu Kim",
+  "license": "ISC"
+}
