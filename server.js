@@ -2,7 +2,7 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const mongoose = require('mongoose');
-const GroupMessage = require('./models/GroupMessage.js');
+const GroupMessage = require('./public/models/GroupMessage.js');
 const userRouter = require('./routes/UserRoutes.js');
 const socketio = require('socket.io');
 

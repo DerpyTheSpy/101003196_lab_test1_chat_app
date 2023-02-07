@@ -19,6 +19,7 @@ body {
 	background: #f4f4f4;
 	margin: 20px;
 	font-family: sans-serif;
+	background:lightgreen;
 }
 
 .btn {
@@ -26,6 +27,17 @@ body {
 	padding: 5px 15px;
 	background: white;
 	color: green;
+	border: 0;
+	margin-bottom: 10px;
+	font-size: 17px;
+}
+
+.btn2 {
+	cursor: pointer;
+	padding: 5px 15px;
+	margin-top: 10px;
+	background: white;
+	color: red;
 	border: 0;
 	font-size: 17px;
 }

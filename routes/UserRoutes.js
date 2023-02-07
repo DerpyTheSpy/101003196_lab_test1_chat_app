@@ -1,5 +1,5 @@
 const express = require('express');
-const UserModel = require('../models/User.js');
+const UserModel = require('../public/models/User.js');
 const routes = express.Router();
 
 // Signup route
