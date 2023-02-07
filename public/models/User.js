@@ -1,30 +1,49 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: [true, "Provide username"],
-    trim: true
+    required: [true, "Please enter the username: "],
+    trim: true,
+    lowercase: true,
+    unique: true,
   },
   firstname: {
     type: String,
-    required: [true, "Provide first name"],
-    trim: true
+    trim: true,
+    lowercase: true,
   },
   lastname: {
     type: String,
-    required: [true, "Provide last name"],
-    trim: true
+    trim: true,
+    lowercase: true,
   },
   password: {
     type: String,
-    required: [true, "Provide password"]
+    required: [true, "Please enter the password for authentication:"],
+    minlength: 5,
   },
   createon: {
     type: Date,
-    default: Date.now
-  }
-})
+    default: Date.now,
+  },
+});
 
-const User = mongoose.model('User', userSchema)
-module.exports = User
+userSchema.post("init", (doc) => {
+  console.log("%s has been initialized from the db", doc._id);
+});
+
+userSchema.post("validate", (doc) => {
+  console.log("%s has been validated (but not saved yet)", doc._id);
+});
+
+userSchema.post("save", (doc) => {
+  console.log("%s has been saved", doc._id);
+});
+
+userSchema.post("remove", (doc) => {
+  console.log("%s has been removed", doc._id);
+});
+
+const user = mongoose.model("user", userSchema);
+module.exports = user;

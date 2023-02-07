@@ -1,217 +1,78 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
 
-:root {
-	--success-color: #5cb85c;
-	--error-color: #d9534f;
-	--dark-color-b: #318CEE;
-	--light-color: #e6e9ff;
-	--dark-color-a: #209CEE;
+html {
+  margin: 0;
+  padding: 0;
 }
-
-* {
-	padding: 0;
-	margin: 0;
-	box-sizing: border-box;
-}
-
 body {
-	font-size: 16px;
-	background: #f4f4f4;
-	margin: 20px;
-	font-family: sans-serif;
-	background:lightgreen;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  font-family: "lato", sans-serif;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
+input {
+  font-size: 20px;
+  padding: 10px 15px;
+  border-radius: 50px;
+  width: 80%;
+  bottom: 15px;
+  left: 15px;
+}
+button {
+  min-width: 100px;
+}
+.Btn {
+  left: 89%;
+  right: 10px;
+  bottom: 15px;
+  width: 10%;
+  min-width: min-content;
+  font-size: 22px;
+  padding: 10px 15px;
+  border-radius: 50px;
+  border: none;
+  background-color: lightseagreen;
+  color: azure;
 }
 
-.btn {
-	cursor: pointer;
-	padding: 5px 15px;
-	background: white;
-	color: green;
-	border: 0;
-	margin-bottom: 10px;
-	font-size: 17px;
+.Btn:hover {
+  background-color: seagreen;
 }
-
-.btn2 {
-	cursor: pointer;
-	padding: 5px 15px;
-	margin-top: 10px;
-	background: white;
-	color: red;
-	border: 0;
-	font-size: 17px;
+#room {
+  padding: 0px 30px;
+  background-color: lightseagreen;
+  display: flex;
 }
-
-a {
-	text-decoration: none;
+i {
+  align-items: center;
+  margin: auto 0;
 }
-
-
-ul {
-	list-style: none;
+h1 {
+  margin: 20px;
 }
-
-
-/* chat frontend */
-
-
-.chat-main {
-	grid-template-columns: 1fr 3fr;
-	display: grid;
+#in {
+  padding: 20px;
+  display: flex;
+  justify-content: space-around;
 }
-
-
-.chat-header {
-	color: #fff;
-	display: flex;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-	padding: 15px;
-	align-items: center;
-	justify-content: space-between;
-	background: green;
+#message-container {
+  width: 93%;
+  margin: auto;
 }
-
-
-.chat-cont {
-	max-width: 1100px;
-	background: #fff;
-	margin: 250px auto;
-	overflow: hidden;
+#message-container > div {
+  padding: 10px 15px;
+  margin: 15px 0px;
+  border-radius: 50px;
+  background-color: lightseagreen;
+  border-radius: 20px;
+  width: max-content;
 }
-
-.chat-side {
-	padding: 20px 20px 60px;
-	background: limegreen;
-	overflow-y: scroll;
-	color: #fff;
-}
-
-.chat-side ul li {
-	padding: 10px 0;
-}
-
-.chat-side h2,
-.chat-side h3 {
-	background: rgba(0, 0, 0, 0.1);
-	padding: 10px;
-	margin-bottom: 20px;
-	font-size: 20px;
-}
-
-
-.chat-msgs {
-	overflow-y: scroll;
-	max-height: 500px;
-	padding: 30px;
-}
-
-.chat-msgs .message .msgInfo span {
-	color: #777;
-}
-
-.chat-msgs .message .msgInfo {
-	font-size: 15px;
-	font-weight: bold;
-	color: green;
-	margin-bottom: 7px;
-	opacity: 0.7;
-}
-
-
-.chat-msgs .message {
-	margin-bottom: 15px;
-	overflow-wrap: break-word;
-	padding: 10px;
-	border-radius: 5px;
-	background-color: greenyellow;
-}
-
-
-
-.chat-form-cont {
-	padding: 20px 30px;
-	background-color: limegreen;
-}
-
-.chat-form-cont input[type='text'] {
-	height: 40px;
-	padding: 5px;
-	font-size: 16px;
-	flex: 1;
-}
-
-.chat-form-cont form {
-	display: flex;
-}
-
-
-
-/* Join Page */
-
-.join-main {
-	background: #5cb85c;
-	padding: 30px 40px;
-}
-
-
-.join-cont {
-	color: #fff;
-	margin: 250px auto;
-	max-width: 500px;
-}
-
-
-.join-main p {
-	margin-bottom: 20px;
-}
-
-.join-header {
-	background: green;
-	padding: 20px;
-	border-top-left-radius: 5px;
-	text-align: center;
-	border-top-right-radius: 5px;
-}
-
-.join-main .form-control {
-	margin-bottom: 20px;
-}
-
-.join-main label {
-	display: block;
-	margin-bottom: 5px;
-}
-
-.join-main input[type='text'] {
-	font-size: 16px;
-	padding: 5px;
-	height: 40px;
-	width: 100%;
-}
-
-.join-main select {
-	font-size: 16px;
-	padding: 5px;
-	height: 40px;
-	width: 100%;
-}
-
-.join-main .btn {
-	margin-top: 20px;
-	width: 100%;
-}
-
-@media (max-width: 768px) {
-	.chat-main {
-		display: block;
-	}
-
-	.chat-side {
-		display: none;
-	}
-}
-
-#room-name {
-	display: inline;
+#cui {
+  color: lightslategray;
+  width: 93%;
+  margin: auto;
 }

@@ -1,133 +1,192 @@
-const express = require('express');
-const http = require('http');
-const path = require('path');
-const mongoose = require('mongoose');
-const userRouter = require('./routes/UserRoutes.js');
-const GroupMessage = require('./public/models/GroupMessage.js');
-const socketio = require('socket.io')
+const app = require("express")();
+const http = require("http").createServer(app);
+const { Console } = require("console");
+const cors = require("cors");
+const PORT = 3000;
+const express = require("express");
+const mongoose = require("mongoose");
+const userModel = require(__dirname + "/public/models/user");
+const gmModel = require(__dirname + "/public/models/groupMessage");
+const pmModel = require(__dirname + "/public/models/privateMessage");
 
-const app = express()
-const server = http.createServer(app)
-const io = socketio(server)
+const io = require("socket.io")(http);
 
-// Connection to mongoDB database
-mongoose.connect('mongodb+srv://derpythespy:2231663@cluster0.4dp6azc.mongodb.net/101003196_lab_test1_chat_app?retryWrites=true&w=majority', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(success => {
-  console.log('Success Mongodb connection')
-}).catch(err => {
-  console.log('Error Mongodb connection')
-});
+app.use(cors());
+users = [];
 
-// MESSAGE FUNCTIONALITY
-function getFormattedTime() {
-  const date = new Date();
-  let hours = date.getHours();
-  let minutes = date.getMinutes();
-  let seconds = date.getSeconds();
+io.on("connection", (socket) => {
+  console.log(`${socket.id} Connected`);
 
-  let am_pm = 'AM';
-  if (hours >= 12) {
-    am_pm = 'PM';
-    hours = hours % 12 || 12;
-  }
+  socket.emit("welcome", "Welcome to Socket Programming : " + socket.id);
 
-  return `  ${hours}:${minutes}:${seconds} ${am_pm}`;
-}
-
-function returnUpdatedMessage(username, text) {
-  return {
-    username,
-    text,
-    createdAt: getFormattedTime()
-  }
-}
-
-
-const users = [];
-
-function userJoin(id, username, room) {
-  const user = { id, username, room };
-  users.push(user);
-  return user;
-}
-
-// Get current user
-function getCurrUser(id) {
-  return users.find(user => user.id === id);
-}
-
-// User exit the chat 
-function userExit(id) {
-  const index = users.findIndex(user => user.id === id);
-  if (index !== -1) {
-    const removedUser = users.splice(index, 1);
-    return removedUser[0];
-  }
-}
-
-// Get room users
-function getUsersFromRoom(room) {
-  return users.filter(user => user.room === room);
-}
-
-// Set static folder
-app.use(express.static(path.join(__dirname, 'public')))
-
-// Execute if client connects 
-io.on('connection', socket => {
-  socket.on('joinRoom', ({ username, room }) => {
-    // Populate selected chat room with messages from mongoDB database
-    GroupMessage.find({ room }).then(success => {
-      socket.emit('populateChatRoom', success)
-    })
-
-    const user = userJoin(socket.id, username, room);
-
-    socket.join(user.room);
-
-    socket.emit('message', returnUpdatedMessage('Minkyu the creator', 'Welcome to my chat app'))
-    // Broadcast when a user connects to a specific room
-    socket.broadcast.to(user.room).emit('message', returnUpdatedMessage('Minkyu the creator', `${user.username} joined the chat`))
-
-    // Add room users and room name to the side panel in the DOM
-    io.to(user.room).emit('roomUsers', {
-      room: user.room,
-      users: getUsersFromRoom(user.room)
-    })
-  })
-
-  // Check userChatMessage from server
-  socket.on('userChatMessage', (msg) => {
-    // Get current user 
-    const user = getCurrUser(socket.id);
-    const message = new GroupMessage({ from_user: user.username, room: user.room, message: msg })
-    message.save().then(success => {
-      console.log('Success - Message saved')
-      io.to(success.room).emit('message', returnUpdatedMessage(success.from_user, success.message));
-    })
-
-
-  })
-
-  // Execute if client disconnected
-  socket.on('disconnect', () => {
-    const user = userExit(socket.id);
-
-    if (user) {
-      io.to(user.room).emit('message', returnUpdatedMessage('Minkyu the creator', `${user.username} has left`))
-
-      // room users and room name to the side panel in the DOM
-      io.to(user.room).emit('roomUsers', {
-        room: user.room,
-        users: getUsersFromRoom(user.room)
-      })
+  socket.on("message", (data) => {
+    if (data.room == "" || data.room == undefined) {
+      io.emit("newMessage", socket.id + " : " + data.message);
+    } else {
+      io.to(data.room).emit("newMessage", socket.id + " : " + data.message);
+      if (
+        data.room == "news" ||
+        data.room == "covid" ||
+        data.room == "nodeJs"
+      ) {
+        const gm = new gmModel({
+          from_user: socket.id,
+          room: data.room,
+          message: data.message,
+        });
+        try {
+          gm.save();
+        } catch (err) {
+          console.log(err);
+        }
+      } else {
+        const pm = new pmModel({
+          from_user: socket.id,
+          to_user: room,
+          message: data.message,
+        });
+        try {
+          pm.save();
+        } catch (err) {
+          console.log(err);
+        }
+      }
     }
-  })
+  });
+
+  socket.on("newUser", (name) => {
+    if (!users.includes(name)) {
+      users.push(name);
+    }
+    socket.id = name;
+  });
+
+  socket.on("userTyping", (data) => {
+    socket.broadcast.to(data.room).emit("showChatUI", data.username);
+  });
+
+  socket.on("joinroom", (room) => {
+    socket.join(room);
+    roomName = room;
+    socket.currentRoom = room;
+    const msg = gmModel
+      .find({ room: room })
+      .sort({ date_sent: "desc" })
+      .limit(10);
+    socket.msg = msg;
+  });
+
+  socket.on("leaveRoom", () => {
+    socket.leave(socket.currentRoom);
+    socket.currentRoom = null;
+    console.log(socket.rooms);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`${socket.id} disconnected`);
+  });
 });
 
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
-app.use(userRouter)
-  
-  server.listen(3000, () => console.log("The server is running on port 3000"));
+app.use(express.json());
+
+mongoose
+  .connect(
+    'mongodb+srv://derpythespy:2231663@cluster0.4dp6azc.mongodb.net/101003196_lab_test1_chat_app?retryWrites=true&w=majority',
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
+  .then((success) => {
+    console.log("Successful Mongodb connection !");
+  })
+  .catch((err) => {
+    console.log("Error in Mongodb connection !");
+  });
+
+//the server http://localhost:3000/signup
+app.get("/signup", async (req, res) => {
+  res.sendFile(__dirname + "/public/signup.html");
+});
+
+//the server http://localhost:3000/login
+app.get("/login", async (req, res) => {
+  res.sendFile(__dirname + "/public/login.html");
+});
+
+app.post("/login", async (req, res) => {
+  const user = new userModel(req.body);
+  try {
+    await user.save((err) => {
+      if (err) {
+        if (err.code === 11000) {
+          return res.redirect("/signup?err=username");
+        }
+
+        res.send(err);
+      } else {
+        return res.redirect("/login");
+      }
+    });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+//the server http://localhost:3000/
+app.get("/", async (req, res) => {
+  res.sendFile(__dirname + "/index.html");
+});
+app.post("/", async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  const user = await userModel.find({ username: username });
+
+  try {
+    if (user.length != 0) {
+      if (user[0].password == password) {
+        return res.redirect("/?uname=" + username);
+      } else {
+        return res.redirect("/login?wrong=pass");
+      }
+    } else {
+      return res.redirect("/login?wrong=uname");
+    }
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+// the covid option http://localhost:3000/chat/covid
+app.get("/chat/:room", async (req, res) => {
+  const room = req.params.room;
+  const msg = await gmModel
+    .find({ room: room })
+    .sort({ date_sent: "desc" })
+    .limit(10)
+    .select("from_user message date_sent");
+  console.log(msg);
+  res.sendFile(__dirname + "/public/chatRoom.html");
+});
+
+app.post("/chat", async (req, res) => {
+  const username = req.body.username;
+  const user = await userModel.find({ username: username });
+
+  if (user[0].username == username) {
+    return res.redirect("/chat/" + username);
+  } else {
+    return res.redirect("/?err=noUser");
+  }
+});
+
+http.listen(PORT, () => {
+  console.log(`Server started at ${PORT}`);
+});

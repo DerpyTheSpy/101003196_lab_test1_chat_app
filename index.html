@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Home Page</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
+
+      body {
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        background-color: rgb(245, 237, 237);
+        font-family: "lato", sans-serif;
+      }
+      .Btn {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 15px 30px;
+        border: none;
+        background-color: rgba(40, 115, 47, 0.664);
+        color: rgb(231, 231, 231);
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 30px;
+      }
+      .signout {
+        margin: 15% auto 0%;
+        padding: 10px 20px;
+        border: none;
+        background-color: rgb(255, 255, 255);
+        color: rgb(255, 208, 0);
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      .signout:hover {
+        color: rgb(255, 255, 255);
+        background-color: #00ff3c;
+        transform: translateY(-2px);
+      }
+      .Btn:hover {
+        background-color: #9fd81b;
+        transform: translateY(-2px);
+      }
+      .mainDiv {
+        max-width: auto;
+        text-align: center;
+      }
+      h1 {
+        text-align: center;
+      }
+      .input {
+        margin-top: 20px;
+        left: 0px;
+        height: 100%;
+        width: 70%;
+        border: 1px solid rgba(100, 131, 101, 0.726);
+        border-radius: 7px;
+        font-size: 16px;
+        padding: 0 20px;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body onload="showErr()">
+    <h1>SimpleChat Rooms</h1>
+    <hr />
+    <div class="mainDiv">
+      <div>
+        <button type="submit" class="Btn" onclick="myFunction('news')">
+          News
+        </button>
+      </div>
+
+      <div>
+        <button type="submit" class="Btn" onclick="myFunction('covid')">
+          Covid - 19
+        </button>
+      </div>
+
+      <div>
+        <button type="submit" class="Btn" onclick="myFunction('nodeJs')">
+          NodeJs
+        </button>
+      </div>
+      <div id="personal" class="inputContainer">
+        <form method="post" action="/chat">
+          <input
+            type="text"
+            name="username"
+            id="username"
+            class="input"
+            placeholder="Enter Username"
+          />
+          <button type="submit" class="Btn">Chat</button>
+        </form>
+      </div>
+    </div>
+    <button type="button" class="signout" onclick="logOut()">Log out</button>
+  </body>
+
+  <script>
+    function setUsername() {
+      var objUrlParams = new URLSearchParams(window.location.search);
+      client.emit("newUser", objUrlParams.get("uname"));
+    }
+    function myFunction(room) {
+      window.location.href = "../chat/" + room;
+    }
+    function logOut() {
+      window.location.href = "/login";
+    }
+    function showErr() {
+      var objUrlParams = new URLSearchParams(window.location.search);
+      if (objUrlParams.get("err") == "noUser") {
+        alert("No User Found!");
+      }
+      setUsername();
+    }
+  </script>
+</html>

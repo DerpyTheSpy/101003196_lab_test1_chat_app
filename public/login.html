@@ -1,50 +1,161 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Log in</title>
-  <link rel="stylesheet" href="./css/login.css">
-
-  </style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="./css/login.css">
 </head>
-<body  onload="checkForErr()">
+<style>
+    body {font-family: Arial, Helvetica, sans-serif;}
 
-    
-    <div class="loginFrm">
-        <form action="/" method="post" class="form" >
-          <h1 class="title">Log in</h1>
-    
-          <div class="inputContainer">
-            <input type="text" class="input" placeholder="Username" name="username" required>
-            <label class="label">User Name</label>
-          </div>
-    
-          <div class="inputContainer">
-            <input type="password" class="input" placeholder="password" name="password" required>
-            <label class="label">Password</label>
-          </div>
-    
-          <p>Don't have an account? <a href="./signup.html">Sign Up</a></p>
-          <div id="err"></div>
-          <button type="submit" class="submitBtn">Log in</button>
-        </form>
-      </div>
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
 
-</body>
+button {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.cancelbtn {
+  width: auto;
+  padding: 10px 18px;
+  background-color: #f44336;
+}
+
+.imgcontainer {
+  text-align: center;
+  margin: 24px 0 12px 0;
+  position: relative;
+}
+
+img.avatar {
+  width: 40%;
+  border-radius: 50%;
+}
+
+.container {
+  padding: 16px;
+}
+
+span.psw {
+  float: right;
+  padding-top: 16px;
+}
+
+.model {
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%;
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4); 
+  padding-top: 60px;
+}
+
+.model-content {
+  background-color: #fefefe;
+  margin: 5% auto 15% auto; 
+  border: 1px solid #888;
+  width: 80%; 
+}
+
+.close {
+  position: absolute;
+  right: 25px;
+  top: 0;
+  color: #000;
+  font-size: 35px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: red;
+  cursor: pointer;
+}
+
+.animate {
+  -webkit-animation: animatezoom 0.6s;
+  animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+  from {-webkit-transform: scale(0)} 
+  to {-webkit-transform: scale(1)}
+}
+  
+@keyframes animatezoom {
+  from {transform: scale(0)} 
+  to {transform: scale(1)}
+}
+
+@media screen and (max-width: 300px) {
+  .cancelbtn {
+     width: 100%;
+  }
+}
+</style>
+<body>
+
+<h2>Login Form</h2>
+
+<button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
+
+<div id="id01" class="model">
+  
+  <form class="model-content animate" action="/action_page.php" method="post">
+    <div class="imgcontainer">
+      <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Model">&times;</span>
+      <img src="img_avatar2.png" alt="Avatar" class="avatar">
+    </div>
+
+    <div class="container">
+      <label for="uname"><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" name="uname" required>
+
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="psw" required>
+        
+      <button type="submit">Login</button>
+      <label>
+        <input type="checkbox" checked="checked" name="remember"> Remember me
+      </label>
+    </div>
+
+    <div class="container" style="background-color:#f1f1f1">
+      <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+      <a href="signup" style="text-decoration:none; float:right; padding-top:16px">Sign Up</a>
+    </div>
+  </form>
+</div>
 
 <script>
-      function checkForErr(){
-        var objUrlParams = new URLSearchParams(window.location.search);
-        if(objUrlParams.get('wrong')=="uname"){
-          document.getElementById('err').innerHTML="Username is Incorrect!"
-        }
-        else if(objUrlParams.get('wrong')=="pass"){
-          document.getElementById('err').innerHTML="Password is incorrect!"
+var model = document.getElementById('id01');
 
-        }
-      }
- </script>
+window.onclick = function(event) {
+    if (event.target == model) {
+        model.style.display = "none";
+    }
+}
+</script>
 
+</body>
 </html>
