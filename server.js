@@ -2,14 +2,14 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const mongoose = require('mongoose');
-const userRouter = require('./routes/UserRoutes.js');
 const GroupMessage = require('./models/GroupMessage.js');
+const userRouter = require('./routes/UserRoutes.js');
 const socketio = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
-
+app.use(express.json());
 mongoose.connect('mongodb+srv://DerpyTheSpy:jk2231663@cluster0.7yumk.mongodb.net/101003196_lab_test1_chat_app?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true
