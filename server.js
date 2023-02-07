@@ -16,6 +16,7 @@ app.use(bodyParser.json());
 
 
 
+
 const io = require("socket.io")(http);
 
 app.use(cors());
@@ -122,28 +123,47 @@ app.get("/signup", async (req, res) => {
   res.sendFile(__dirname + "/public/signup.html");
 });
 
+app.post("/login", async (req, res) => {
+  try{
+      const check= await collection.findOne({username:req.body.username});
+      if(check.password === req.body.password){
+          res.redirect('/chat');
+      }
+      else{
+          res.send("Invalid credentials")
+          res.render('/login');
+   
+      }
+  }catch{
+      res.send("Invalid credentials")
+      res.render('/login');
+  }
+
+});
 //the server http://localhost:3000/login
 app.get("/login", async (req, res) => {
   res.sendFile(__dirname + "/public/login.html");
 });
 
 app.post("/signup", async (req, res) => {
-  const user = new userModel(req.body);
-  try {
-    await user.save((err) => {
-      if (err) {
-        if (err.code === 11000) {
-          return res.redirect("/signup?err=username");
-        }
-
-        res.send(err);
-      } else {
-        return res.redirect("/login");
-      }
-    });
-  } catch (err) {
-    res.status(500).send(err);
+  const user = new User(req.body);
+  try{
+   const newuser = await user.save();
+   if(newuser!=null){
+       res.redirect('/login');
+   }
+  }catch{
+      res.send("Invalid credentials")
+      res.render('/signup');
   }
+  user.save()
+  .then(data => {
+      res.send(data);
+  }).catch(err => {
+      res.status(500).send({
+          message: err.message || "Some error occurred while creating the account."
+      });
+  });
 });
 
 //the server http://localhost:3000/
@@ -151,24 +171,20 @@ app.get("/", async (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 app.post("/", async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-
-  const user = await userModel.find({ username: username });
-
-  try {
-    if (user.length != 0) {
-      if (user[0].password == password) {
-        return res.redirect("/?uname=" + username);
-      } else {
-        return res.redirect("/login?wrong=pass");
-      }
-    } else {
-      return res.redirect("/login?wrong=uname");
-    }
-  } catch (err) {
-    res.status(500).send(err);
-  }
+  const user = new User(req.body);
+  // try{
+      const newuser = await user.save();
+      if(newuser!=null){
+          res.redirect('/login');
+      }        
+  user.save()
+  .then(data => {
+      res.send(data);
+  }).catch(err => {
+      res.status(500).send({
+          message: err.message || "Some error occurred while creating the account."
+      });
+  });
 });
 
 // the covid option http://localhost:3000/chat/covid
