@@ -5,9 +5,9 @@ const cors = require("cors");
 const PORT = 3000;
 const express = require("express");
 const mongoose = require("mongoose");
-const userModel = require(__dirname + "/public/models/user");
-const gmModel = require(__dirname + "/public/models/groupMessage");
-const pmModel = require(__dirname + "/public/models/privateMessage");
+const userModel = require(__dirname + "/public/models/User");
+const gmModel = require(__dirname + "/public/models/GroupMessage");
+const pmModel = require(__dirname + "/public/models/PrivateMessage");
 
 const io = require("socket.io")(http);
 
