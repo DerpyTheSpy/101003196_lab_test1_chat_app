@@ -1,56 +1,31 @@
 const chatForm = document.getElementById('chat-form');
-const chatMessages = document.querySelector('.chat-messages')
-const roomName = document.getElementById('room-name')
-const userList = document.getElementById('users')
 
 const socket = io();
 
-// get username and room from URL
-const{ username, room } = Qs.parse(location.search, {
-  ignoreQueryPrefix: true
-})
-
+// Get Query Params from URL
+const urlParams = new URLSearchParams(window.location.search);
+const username = urlParams.get('username');
+const room = urlParams.get('room');
 
 // User joins the room
 socket.emit('joinRoom', { username, room });
 
 // Access room users and room name from socket server
 socket.on('roomUsers', ({ room, users }) => {
-  outputRoomName(room);
-  outputUsers(users);
+  returnRoomAndUsers(room, users);
 })
-
-// Output room name
-function outputRoomName(room) {
-  roomName.innerText = room;
-}
-
-// Output users
-function outputUsers(users) {
-  userList.innerHTML = `
-    ${users.map(user => `<li>${user.username}</li>`).join('')}
-  `;
-}
-
-
 
 
 // Submit message
 socket.on('message', message => {
   console.log(message);
   addMessageToDOM(message);
-  // Scroll down
-  chatMessages.scrollTop = chatMessages.scrollHeight;
 })
-
-//populate chat rooms
 
 socket.on('populateChatRoom', messageDB => {
-  messageDB.forEach(message => {
-    addMessageFromDB(message);
-  })
+  console.log(messageDB);
+  addMessageFromDB(messageDB);
 })
-
 
 chatForm.addEventListener('submit', (e) => {
   e.preventDefault();
