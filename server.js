@@ -120,7 +120,7 @@ app.get("/login", async (req, res) => {
   res.sendFile(__dirname + "/public/login.html");
 });
 
-app.post("/login", async (req, res) => {
+app.post("/signup", async (req, res) => {
   const user = new userModel(req.body);
   try {
     await user.save((err) => {
